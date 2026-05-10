@@ -1,0 +1,58 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: api-gateway
+
+  cloud:
+    gateway:
+      server:
+        webmvc:
+          routes:
+            - id: ruta-mascotas
+              uri: lb://ms-gestion-mascotas
+              predicates:
+                - Path=/api/mascotas/**
+            - id: ms-geolocalizacion
+              uri: lb://ms-geolocalizacion
+              predicates:
+                - Path=/api/geolocalizacion/**
+            - id: ms-motor-coincidencias
+              uri: lb://ms-motor-coincidencias
+              predicates:
+                - Path=/api/coincidencias/**
+            - id: ms-usuarios
+              uri: lb://ms-usuarios
+              predicates:
+                - Path=/api/usuarios/**
+            - id: ms-notificaciones 
+              uri: lb://ms-notificaciones 
+              predicates:
+                - Path=/api/notificaciones/**
+            - id: ms-bff
+              uri: lb://ms-bff
+              predicates:
+                - Path=/api/v1/web/**
+
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_URL:http://localhost:8761/eureka/}
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    urls:
+      - name: "BFF - Web API"
+        url: /api/v1/web/v3/api-docs
+      - name: "Mascotas"
+        url: /api/mascotas/v3/api-docs
+      - name: "Usuarios"
+        url: /api/usuarios/v3/api-docs
+      - name: "Notificaciones"
+        url: /api/notificaciones/v3/api-docs
+      - name: "Coincidencias"
+        url: /api/coincidencias/v3/api-docs
+      - name: "Geolocalización"
+        url: /api/geolocalizacion/v3/api-docs
