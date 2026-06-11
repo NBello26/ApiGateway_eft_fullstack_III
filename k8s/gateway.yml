@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gateway-deployment
+  labels:
+    app: api-gateway
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: api-gateway
+  template:
+    metadata:
+      labels:
+        app: api-gateway
+    spec:
+      containers:
+      - name: api-gateway
+        image: 782424855823.dkr.ecr.us-east-1.amazonaws.com/api-gateway:${IMAGE_TAG}
+        ports:
+        - containerPort: 8080
+        env:
+        # Le decimos dónde encontrar el mapa de Eureka
+        - name: EUREKA_URL
+          value: "http://eureka-service:8761/eureka/"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gateway-service
+spec:
+  type: LoadBalancer # PÚBLICO: AWS creará un DNS para esto
+  selector:
+    app: api-gateway
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
