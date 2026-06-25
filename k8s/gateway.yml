@@ -29,7 +29,7 @@ kind: Service
 metadata:
   name: gateway-service
 spec:
-  type: LoadBalancer # PÚBLICO: AWS creará un DNS para esto
+  type: LoadBalancer # PÚBLICO: AWS creará un DNS para estoas
   selector:
     app: api-gateway
   ports:
